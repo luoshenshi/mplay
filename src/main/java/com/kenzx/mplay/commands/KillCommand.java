@@ -1,12 +1,12 @@
-package dev.derock.svcmusic.commands;
+package com.kenzx.mplay.commands;
 
+import com.kenzx.mplay.MPlayClient;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import dev.derock.svcmusic.SimpleVoiceChatMusic;
-import dev.derock.svcmusic.audio.GroupManager;
-import dev.derock.svcmusic.audio.MusicManager;
-import dev.derock.svcmusic.util.ModUtils;
+import com.kenzx.mplay.audio.GroupManager;
+import com.kenzx.mplay.audio.MusicManager;
+import com.kenzx.mplay.util.ModUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
@@ -17,7 +17,7 @@ import net.minecraft.network.chat.Style;
 import java.util.HashSet;
 import java.util.UUID;
 
-import static dev.derock.svcmusic.util.ModUtils.checkPlayerGroup;
+import static com.kenzx.mplay.util.ModUtils.checkPlayerGroup;
 
 public class KillCommand {
     private static HashSet<UUID> warned = new HashSet<>();
@@ -39,7 +39,7 @@ public class KillCommand {
             return 0;
         }
 
-        SimpleVoiceChatMusic.SCHEDULED_EXECUTOR.execute(() -> {
+        MPlayClient.SCHEDULED_EXECUTOR.execute(() -> {
             GroupManager gm = MusicManager.getInstance().getGroup(result.group(), result.player().level().getServer());
             gm.broadcast(Component.literal("Playback forcibly killed by " + result.source().getTextName() + "."));
             gm.cleanup();

@@ -1,43 +1,45 @@
-package dev.derock.svcmusic.commands;
+package com.kenzx.mplay.commands;
 
+import com.kenzx.mplay.MPlayClient;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import dev.derock.svcmusic.audio.GroupManager;
-import dev.derock.svcmusic.audio.MusicManager;
-import dev.derock.svcmusic.SimpleVoiceChatMusic;
-import dev.derock.svcmusic.audio.PlayLoadHandler;
-import dev.derock.svcmusic.util.ModUtils;
+import com.kenzx.mplay.audio.SearchLoadHandler;
+import com.kenzx.mplay.audio.GroupManager;
+import com.kenzx.mplay.audio.MusicManager;
+import com.kenzx.mplay.util.ModUtils;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
 
-import static dev.derock.svcmusic.util.ModUtils.checkPlayerGroup;
+import static com.kenzx.mplay.util.ModUtils.checkPlayerGroup;
+import static com.kenzx.mplay.util.ModUtils.parseTrackId;
 
-
-public class PlayCommand {
+public class SearchCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext commandRegistryAccess, Commands.CommandSelection registrationEnvironment) {
         dispatcher.register(Commands.literal("music")
-            .then(Commands.literal("play")
+            .then(Commands.literal("search")
                 .then(Commands.argument("query", StringArgumentType.string())
-                    .executes(PlayCommand::execute))));
+                    .executes(SearchCommand::execute))));
     }
 
     public static int execute(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
-        final String query = ModUtils.parseTrackId(StringArgumentType.getString(context, "query"));
+        final String query = parseTrackId(StringArgumentType.getString(context, "query"));
+
         ModUtils.CheckPlayerGroup result = checkPlayerGroup(context);
         if (result == null) return 1;
 
-        SimpleVoiceChatMusic.SCHEDULED_EXECUTOR.execute(() -> {
-            GroupManager gm = MusicManager.getInstance().getGroup(result.group(), result.player().level().getServer());
+        MPlayClient.LOGGER.debug("Searching for " + query);
 
+        MPlayClient.SCHEDULED_EXECUTOR.execute(() -> {
+            GroupManager gm = MusicManager.getInstance().getGroup(result.group(), result.player().level().getServer());
             result.source().sendSystemMessage(Component.literal("Loading songs..."));
             MusicManager.getInstance().playerManager.loadItemOrdered(
                 gm.getPlayer(),
                 query,
-                new PlayLoadHandler(result.source(), gm)
+                new SearchLoadHandler(result.source(), gm)
             );
         });
 

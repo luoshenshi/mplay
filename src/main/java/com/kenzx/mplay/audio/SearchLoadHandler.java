@@ -1,11 +1,11 @@
-package dev.derock.svcmusic.audio;
+package com.kenzx.mplay.audio;
 
+import com.kenzx.mplay.MPlayClient;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import dev.derock.svcmusic.SimpleVoiceChatMusic;
-import dev.derock.svcmusic.util.ModUtils;
+import com.kenzx.mplay.util.ModUtils;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -79,7 +79,7 @@ public class SearchLoadHandler implements AudioLoadResultHandler {
     @Override
     public void loadFailed(FriendlyException exception) {
         if (!exception.severity.equals(FriendlyException.Severity.COMMON)) {
-            SimpleVoiceChatMusic.LOGGER.warn("Failed to load track from query", exception);
+            MPlayClient.LOGGER.warn("Failed to load track from query", exception);
         }
 
         if (source != null) {

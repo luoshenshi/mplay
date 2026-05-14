@@ -1,10 +1,10 @@
-package dev.derock.svcmusic.audio;
+package com.kenzx.mplay.audio;
 
+import com.kenzx.mplay.MPlayClient;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import de.maxhenkel.voicechat.api.Group;
-import dev.derock.svcmusic.SimpleVoiceChatMusic;
 import dev.lavalink.youtube.YoutubeAudioSourceManager;
 import net.minecraft.server.MinecraftServer;
 
@@ -17,7 +17,7 @@ public class MusicManager {
     private final HashMap<UUID, GroupManager> groups = new HashMap<>();
 
     public MusicManager() {
-        SimpleVoiceChatMusic.LOGGER.info("Loading sources...");
+        MPlayClient.LOGGER.info("Loading sources...");
         this.playerManager = new DefaultAudioPlayerManager();
 
         // allow hotswapping EQ levels
@@ -31,7 +31,7 @@ public class MusicManager {
 
         YoutubeAudioSourceManager ytSourceManager = new YoutubeAudioSourceManager();
         this.playerManager.registerSourceManager(ytSourceManager);
-        SimpleVoiceChatMusic.LOGGER.info("Loaded all sources!");
+        MPlayClient.LOGGER.info("Loaded all sources!");
     }
 
     public static MusicManager getInstance() {

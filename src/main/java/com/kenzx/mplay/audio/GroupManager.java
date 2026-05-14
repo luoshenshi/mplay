@@ -1,5 +1,7 @@
-package dev.derock.svcmusic.audio;
+package com.kenzx.mplay.audio;
 
+import com.kenzx.mplay.MPlayClient;
+import com.kenzx.mplay.MPlayServer;
 import com.sedmelluq.discord.lavaplayer.filter.equalizer.EqualizerFactory;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
@@ -7,8 +9,6 @@ import com.sedmelluq.discord.lavaplayer.track.playback.MutableAudioFrame;
 import de.maxhenkel.voicechat.api.Group;
 import de.maxhenkel.voicechat.api.VoicechatConnection;
 import de.maxhenkel.voicechat.api.audiochannel.StaticAudioChannel;
-import dev.derock.svcmusic.SimpleVoiceChatMusic;
-import dev.derock.svcmusic.VoiceChatPlugin;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.MinecraftServer;
@@ -20,7 +20,7 @@ import java.util.HashSet;
 import java.util.UUID;
 import java.util.concurrent.*;
 
-import static dev.derock.svcmusic.util.Constants.BASS_BOOST;
+import static com.kenzx.mplay.util.Constants.BASS_BOOST;
 
 public class GroupManager {
     private final Group group;
@@ -39,7 +39,7 @@ public class GroupManager {
         Thread thread = new Thread(r, "SVCGroupMusicExecutor");
         thread.setDaemon(true);
         thread.setUncaughtExceptionHandler(
-            (t, e) -> SimpleVoiceChatMusic.LOGGER.error("Uncaught exception in thread {}", t.getName(), e)
+            (t, e) -> MPlayClient.LOGGER.error("Uncaught exception in thread {}", t.getName(), e)
         );
 
         return thread;
@@ -78,19 +78,19 @@ public class GroupManager {
     private void startAudioFrameSending() {
         if (this.audioFrameSendingTask != null && !this.audioFrameSendingTask.isDone()) {
             // already started, so leave it.
-            SimpleVoiceChatMusic.LOGGER.info("Not starting new audio frame sending task.");
+            MPlayClient.LOGGER.info("Not starting new audio frame sending task.");
             return;
         }
 
         if (this.audioFrameSendingTask != null && this.audioFrameSendingTask.isDone()) {
             // stop and restart
-            SimpleVoiceChatMusic.LOGGER.info("Frame task in stuck state, attempting to revive");
+            MPlayClient.LOGGER.info("Frame task in stuck state, attempting to revive");
             this.audioFrameSendingTask.cancel(true);
         }
 
-        SimpleVoiceChatMusic.LOGGER.info("Starting new audio frame sending task.");
+        MPlayClient.LOGGER.info("Starting new audio frame sending task.");
         this.audioFrameSendingTask = this.executorService.scheduleAtFixedRate(() -> {
-            if (VoiceChatPlugin.voicechatServerApi == null) {
+            if (MPlayServer.voicechatServerApi == null) {
                 return;
             }
 
@@ -109,12 +109,12 @@ public class GroupManager {
 
     private void startGroupTracking() {
         this.playerTrackingTask = executorService.scheduleAtFixedRate(() -> {
-            if (VoiceChatPlugin.voicechatServerApi == null) return;
+            if (MPlayServer.voicechatServerApi == null) return;
 
             HashSet<UUID> uuids = new HashSet<>();
 
             for (ServerPlayer serverPlayer : server.getPlayerList().getPlayers()) {
-                VoicechatConnection playerConnection = VoiceChatPlugin.voicechatServerApi.getConnectionOf(serverPlayer.getUUID());
+                VoicechatConnection playerConnection = MPlayServer.voicechatServerApi.getConnectionOf(serverPlayer.getUUID());
 
                 if (playerConnection == null || !playerConnection.isConnected()) continue;
                 Group playerGroup = playerConnection.getGroup();
@@ -125,14 +125,14 @@ public class GroupManager {
                 connections.computeIfAbsent(
                     serverPlayer.getUUID(),
                     (uuid) -> {
-                        StaticAudioChannel channel = VoiceChatPlugin.voicechatServerApi.createStaticAudioChannel(
+                        StaticAudioChannel channel = MPlayServer.voicechatServerApi.createStaticAudioChannel(
                             UUID.randomUUID(),
-                            VoiceChatPlugin.voicechatServerApi.fromServerLevel(serverPlayer.level()),
+                            MPlayServer.voicechatServerApi.fromServerLevel(serverPlayer.level()),
                             playerConnection
                         );
 
                         if (channel == null) return null;
-                        channel.setCategory(VoiceChatPlugin.MUSIC_CATEGORY);
+                        channel.setCategory(MPlayServer.MUSIC_CATEGORY);
 
                         return channel;
                     }
@@ -147,13 +147,13 @@ public class GroupManager {
 
             // clean up if no players
             if (this.connections.isEmpty()) {
-                SimpleVoiceChatMusic.LOGGER.info("Group {} is now empty. Cleaning up...", this.group.getName());
+                MPlayClient.LOGGER.info("Group {} is now empty. Cleaning up...", this.group.getName());
                 this.cleanup();
             }
 
             // stop if no songs queued
             // if (this.lavaplayer.getPlayingTrack() == null && this.queue.isEmpty() && this.audioFrameSendingTask != null) {
-            //     SimpleVoiceChatMusic.LOGGER.info("Pausing playback in {} due to empty queue", this.group.getName());
+            //     MPlayClient.LOGGER.info("Pausing playback in {} due to empty queue", this.group.getName());
             //     this.audioFrameSendingTask.cancel(false);
             //     this.audioFrameSendingTask = null;
             // }

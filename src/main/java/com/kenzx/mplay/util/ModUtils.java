@@ -1,10 +1,10 @@
-package dev.derock.svcmusic.util;
+package com.kenzx.mplay.util;
 
 import com.mojang.brigadier.context.CommandContext;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 import de.maxhenkel.voicechat.api.Group;
 import de.maxhenkel.voicechat.api.VoicechatConnection;
-import dev.derock.svcmusic.VoiceChatPlugin;
+import com.kenzx.mplay.MPlayServer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.ClickEvent;
@@ -84,7 +84,7 @@ public class ModUtils {
     public static @Nullable CheckPlayerGroup checkPlayerGroup(CommandContext<CommandSourceStack> context) {
         CommandSourceStack source = context.getSource();
 
-        if (VoiceChatPlugin.voicechatServerApi == null) {
+        if (MPlayServer.voicechatServerApi == null) {
             source.sendSystemMessage(
                 Component.literal("VoiceChat API connection has not been established yet! Please try again later.")
             );
@@ -100,7 +100,7 @@ public class ModUtils {
             return null;
         }
 
-        VoicechatConnection connection = VoiceChatPlugin.voicechatServerApi.getConnectionOf(player.getUUID());
+        VoicechatConnection connection = MPlayServer.voicechatServerApi.getConnectionOf(player.getUUID());
 
         if (connection == null) {
             source.sendSystemMessage(

@@ -1,4 +1,4 @@
-package dev.derock.svcmusic.audio;
+package com.kenzx.mplay.audio;
 
 import de.maxhenkel.voicechat.api.Group;
 

@@ -1,33 +1,41 @@
 {
   "schemaVersion": 1,
-  "id": "simple-voice-chat-music",
+  "id": "mplay",
   "version": "${version}",
-  "name": "Simple Voice Chat Music",
-  "description": "This is an example description! Tell everyone what your mod is about!",
+
+  "name": "MPlay",
+  "description": "Play music in Minecraft using Simple Voice Chat.",
+
   "authors": [
-    "Derock <derock@derock.dev>"
+    "Kenzx"
   ],
+
   "contact": {
-    "homepage": "https://fabricmc.net/",
-    "sources": "https://github.com/FabricMC/fabric-example-mod"
+    "homepage": "https://github.com/luoshenshi/mplay",
+    "sources": "https://github.com/luoshenshi/mplay",
+    "issues": "https://github.com/luoshenshi/mplay/issues"
   },
-  "license": "CC0-1.0",
-  "icon": "assets/simple-voice-chat-music/icon.png",
+
+  "license": "MIT",
+  "icon": "assets/mplay/icon.png",
+
   "environment": "*",
+
   "entrypoints": {
     "main": [
-      "dev.derock.svcmusic.SimpleVoiceChatMusic"
+      "com.kenzx.mplay.MPlayClient"
     ],
     "voicechat": [
-      "dev.derock.svcmusic.VoiceChatPlugin"
+      "com.kenzx.mplay.MPlayServer"
     ]
   },
-  "mixins": [
-  ],
+
+  "mixins": [],
+
   "depends": {
     "fabricloader": ">=0.19.2",
     "minecraft": "~26.1.2",
-    "java": ">=25",
+    "java": ">=21",
     "fabric-api": "*",
     "voicechat": ">=2.6.17+26.1.2"
   }

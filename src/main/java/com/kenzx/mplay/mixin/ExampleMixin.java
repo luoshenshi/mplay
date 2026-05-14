@@ -1,4 +1,4 @@
-package dev.derock.svcmusic.mixin;
+package com.kenzx.mplay.mixin;
 
 import net.minecraft.server.MinecraftServer;
 import org.spongepowered.asm.mixin.Mixin;

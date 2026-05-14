@@ -1,7 +1,7 @@
-package dev.derock.svcmusic;
+package com.kenzx.mplay;
 
-import dev.derock.svcmusic.audio.MusicManager;
-import dev.derock.svcmusic.commands.*;
+import com.kenzx.mplay.audio.MusicManager;
+import com.kenzx.mplay.commands.*;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
@@ -11,19 +11,18 @@ import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
-public class SimpleVoiceChatMusic implements ModInitializer {
+public class MPlayClient implements ModInitializer {
     // This logger is used to write text to the console and the log file.
     // It is considered best practice to use your mod id as the logger's name.
     // That way, it's clear which mod wrote info, warnings, and errors.
-    public static final Logger LOGGER = LoggerFactory.getLogger("simple-voice-chat-music");
+    public static final Logger LOGGER = LoggerFactory.getLogger("mplay");
 
     public static ScheduledExecutorService SCHEDULED_EXECUTOR = Executors.newScheduledThreadPool(1, r -> {
-        Thread thread = new Thread(r, "SVCMusicExecutor");
+        Thread thread = new Thread(r, "MPlayExecutor");
         thread.setDaemon(true);
         thread.setUncaughtExceptionHandler(
-            (t, e) -> SimpleVoiceChatMusic.LOGGER.error("Uncaught exception in thread {}", t.getName(), e)
+            (t, e) -> MPlayClient.LOGGER.error("Uncaught exception in thread {}", t.getName(), e)
         );
 
         return thread;
@@ -48,6 +47,6 @@ public class SimpleVoiceChatMusic implements ModInitializer {
             MusicManager.getInstance().cleanup();
         });
 
-        LOGGER.info("Loaded Simple Voice Chat Music!");
+        LOGGER.info("Loaded MPlay");
     }
 }

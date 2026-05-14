@@ -1,4 +1,4 @@
-package dev.derock.svcmusic.audio;
+package com.kenzx.mplay.audio;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import net.minecraft.commands.CommandSourceStack;

@@ -1,21 +1,20 @@
-package dev.derock.svcmusic.commands;
+package com.kenzx.mplay.commands;
 
+import com.kenzx.mplay.MPlayClient;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
-import dev.derock.svcmusic.SimpleVoiceChatMusic;
-import dev.derock.svcmusic.audio.GroupManager;
-import dev.derock.svcmusic.audio.GroupSettingsManager;
-import dev.derock.svcmusic.audio.MusicManager;
-import dev.derock.svcmusic.util.ModUtils;
+import com.kenzx.mplay.audio.GroupManager;
+import com.kenzx.mplay.audio.GroupSettingsManager;
+import com.kenzx.mplay.audio.MusicManager;
+import com.kenzx.mplay.util.ModUtils;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
 
-import static dev.derock.svcmusic.util.ModUtils.checkPlayerGroup;
+import static com.kenzx.mplay.util.ModUtils.checkPlayerGroup;
 
 public class NowPlayingCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext commandRegistryAccess, Commands.CommandSelection registrationEnvironment) {
@@ -28,7 +27,7 @@ public class NowPlayingCommand {
         ModUtils.CheckPlayerGroup result = checkPlayerGroup(context);
         if (result == null) return 1;
 
-        SimpleVoiceChatMusic.SCHEDULED_EXECUTOR.execute(() -> {
+        MPlayClient.SCHEDULED_EXECUTOR.execute(() -> {
             GroupManager gm = MusicManager.getInstance().getGroup(result.group(), result.player().level().getServer());
             AudioTrack track = gm.getPlayer().getPlayingTrack();
             GroupSettingsManager settings = gm.getSettingsStore();

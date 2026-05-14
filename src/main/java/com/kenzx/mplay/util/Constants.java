@@ -1,4 +1,4 @@
-package dev.derock.svcmusic.util;
+package com.kenzx.mplay.util;
 
 public class Constants {
     public static final float[] BASS_BOOST = {
