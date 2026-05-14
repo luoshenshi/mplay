@@ -6,21 +6,21 @@ import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import dev.derock.svcmusic.SimpleVoiceChatMusic;
 import dev.derock.svcmusic.util.ModUtils;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.text.ClickEvent;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.ClickEvent;
 
 import java.util.List;
 import java.util.Objects;
 
 public class SearchLoadHandler implements AudioLoadResultHandler {
 
-    protected final ServerCommandSource source;
+    protected final CommandSourceStack source;
     protected final GroupManager group;
 
-    public SearchLoadHandler(ServerCommandSource source, GroupManager group) {
+    public SearchLoadHandler(CommandSourceStack source, GroupManager group) {
         this.source = source;
         this.group = group;
     }
@@ -31,7 +31,7 @@ public class SearchLoadHandler implements AudioLoadResultHandler {
 
         if (source != null) {
             this.group.broadcast(
-                Text.literal("Enqueued ")
+                Component.literal("Enqueued ")
                     .append(ModUtils.trackInfo(track.getInfo(), true))
                     .append(" - ").append(Objects.requireNonNull(source.getPlayer()).getName())
             );
@@ -45,27 +45,34 @@ public class SearchLoadHandler implements AudioLoadResultHandler {
 
         if (source != null) {
             // get all titles and create one large string
-            MutableText text = Text.literal("Found " + loaded.size() + " results: \n");
+            MutableComponent text = Component.literal("Found " + loaded.size() + " results: \n");
 
             for (AudioTrack track : loaded) {
-                text.append(Text.literal("  - "))
+                text.append(Component.literal("  - "))
                     .append(ModUtils.trackInfo(track.getInfo(), true))
-                    .append(Text.literal("\n"))
-                    .append(Text.literal("    "))
-                    .append(Text.literal("[Click to add to queue]").setStyle(
-                        Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/music play \"" + track.getIdentifier() + "\""))
-                    ))
-                    .append(Text.literal("\n\n"));
+                    .append(Component.literal("\n"))
+                    .append(Component.literal("    "))
+                        .append(
+                                Component.literal("[Click to add to queue]")
+                                        .setStyle(
+                                                Style.EMPTY.withClickEvent(
+                                                        new ClickEvent.RunCommand(
+                                                                "/music play \"" + track.getIdentifier() + "\""
+                                                        )
+                                                )
+                                        )
+                        )
+                    .append(Component.literal("\n\n"));
             }
 
-            source.sendFeedback(() -> text, false);
+            source.sendSystemMessage(text);
         }
     }
 
     @Override
     public void noMatches() {
         if (source != null) {
-            source.sendFeedback(() -> Text.literal("No matches found!"), false);
+            source.sendSystemMessage(Component.literal("No matches found!"));
         }
     }
 
@@ -76,7 +83,7 @@ public class SearchLoadHandler implements AudioLoadResultHandler {
         }
 
         if (source != null) {
-            source.sendFeedback(() -> Text.literal(exception.severity == FriendlyException.Severity.COMMON ? "Failed to load track: " + exception.getMessage() : "Track failed to load! Check server logs for more information"), false);
+            source.sendSystemMessage(Component.literal(exception.severity == FriendlyException.Severity.COMMON ? "Failed to load track: " + exception.getMessage() : "Track failed to load! Check server logs for more information"));
         }
     }
 }

@@ -9,33 +9,31 @@ import dev.derock.svcmusic.audio.MusicManager;
 import dev.derock.svcmusic.SimpleVoiceChatMusic;
 import dev.derock.svcmusic.audio.PlayLoadHandler;
 import dev.derock.svcmusic.util.ModUtils;
-import net.minecraft.command.CommandRegistryAccess;
-import net.minecraft.server.command.CommandManager;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.text.Text;
+import net.minecraft.commands.CommandBuildContext;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import net.minecraft.network.chat.Component;
 
 import static dev.derock.svcmusic.util.ModUtils.checkPlayerGroup;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 
 public class PlayCommand {
-    public static void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess commandRegistryAccess, CommandManager.RegistrationEnvironment registrationEnvironment) {
-        dispatcher.register(CommandManager.literal("music")
-            .then(CommandManager.literal("play")
-                .then(CommandManager.argument("query", StringArgumentType.string())
+    public static void register(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext commandRegistryAccess, Commands.CommandSelection registrationEnvironment) {
+        dispatcher.register(Commands.literal("music")
+            .then(Commands.literal("play")
+                .then(Commands.argument("query", StringArgumentType.string())
                     .executes(PlayCommand::execute))));
     }
 
-    public static int execute(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+    public static int execute(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         final String query = ModUtils.parseTrackId(StringArgumentType.getString(context, "query"));
         ModUtils.CheckPlayerGroup result = checkPlayerGroup(context);
         if (result == null) return 1;
 
         SimpleVoiceChatMusic.SCHEDULED_EXECUTOR.execute(() -> {
-            GroupManager gm = MusicManager.getInstance().getGroup(result.group(), result.player().getServer());
+            GroupManager gm = MusicManager.getInstance().getGroup(result.group(), result.player().level().getServer());
 
-            result.source().sendFeedback(() -> Text.literal("Loading songs..."), false);
+            result.source().sendSystemMessage(Component.literal("Loading songs..."));
             MusicManager.getInstance().playerManager.loadItemOrdered(
                 gm.getPlayer(),
                 query,

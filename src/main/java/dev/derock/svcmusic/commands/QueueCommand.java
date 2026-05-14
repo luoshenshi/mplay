@@ -8,54 +8,47 @@ import dev.derock.svcmusic.SimpleVoiceChatMusic;
 import dev.derock.svcmusic.audio.GroupManager;
 import dev.derock.svcmusic.audio.MusicManager;
 import dev.derock.svcmusic.util.ModUtils;
-import net.minecraft.command.CommandRegistryAccess;
-import net.minecraft.server.command.CommandManager;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.text.ClickEvent;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
+import net.minecraft.commands.CommandBuildContext;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 
 import java.util.concurrent.BlockingQueue;
 
 import static dev.derock.svcmusic.util.ModUtils.checkPlayerGroup;
 
 public class QueueCommand {
-    public static void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess commandRegistryAccess, CommandManager.RegistrationEnvironment registrationEnvironment) {
-        dispatcher.register(CommandManager.literal("music")
-            .then(CommandManager.literal("queue")
-                .executes(QueueCommand::execute)));
+    public static void register(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext commandRegistryAccess, Commands.CommandSelection registrationEnvironment) {
+        dispatcher.register(Commands.literal("music").then(Commands.literal("queue").executes(QueueCommand::execute)));
     }
 
-    public static int execute(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+    public static int execute(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         ModUtils.CheckPlayerGroup result = checkPlayerGroup(context);
         if (result == null) return 1;
 
         SimpleVoiceChatMusic.SCHEDULED_EXECUTOR.execute(() -> {
-            GroupManager gm = MusicManager.getInstance().getGroup(result.group(), result.player().getServer());
+            GroupManager gm = MusicManager.getInstance().getGroup(result.group(), result.player().level().getServer());
 
-            MutableText text = Text.empty();
+            MutableComponent text = Component.empty();
             AudioTrack currentTrack = gm.getPlayer().getPlayingTrack();
             BlockingQueue<AudioTrack> tracks = gm.getQueue();
 
             if (currentTrack != null) {
-                text.append(Text.literal("Current: ").append(ModUtils.trackInfo(currentTrack.getInfo())).append("\n"));
+                text.append(Component.literal("Current: ").append(ModUtils.trackInfo(currentTrack.getInfo())).append("\n"));
             }
 
             AudioTrack[] tracksArr = tracks.toArray(AudioTrack[]::new);
             for (int i = 0; i < tracksArr.length; i++) {
                 AudioTrack track = tracksArr[i];
-                text.append(Text.literal(i + ". ").append(ModUtils.trackInfo(track.getInfo())).append(Text.literal("\n")));
+                text.append(Component.literal(i + ". ").append(ModUtils.trackInfo(track.getInfo())).append(Component.literal("\n")));
             }
 
             if (text.getString().isBlank()) {
-                text.append(Text.literal("No songs in the queue."));
+                text.append(Component.literal("No songs in the queue."));
             }
 
-            result.source().sendFeedback(
-                () -> text,
-                false
-            );
+            result.source().sendSystemMessage(text);
         });
 
         return 0;

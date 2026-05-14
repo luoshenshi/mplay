@@ -9,10 +9,10 @@ import de.maxhenkel.voicechat.api.VoicechatConnection;
 import de.maxhenkel.voicechat.api.audiochannel.StaticAudioChannel;
 import dev.derock.svcmusic.SimpleVoiceChatMusic;
 import dev.derock.svcmusic.VoiceChatPlugin;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
+import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.Nullable;
 
 import java.nio.ByteBuffer;
@@ -113,21 +113,21 @@ public class GroupManager {
 
             HashSet<UUID> uuids = new HashSet<>();
 
-            for (ServerPlayerEntity serverPlayer : server.getPlayerManager().getPlayerList()) {
-                VoicechatConnection playerConnection = VoiceChatPlugin.voicechatServerApi.getConnectionOf(serverPlayer.getUuid());
+            for (ServerPlayer serverPlayer : server.getPlayerList().getPlayers()) {
+                VoicechatConnection playerConnection = VoiceChatPlugin.voicechatServerApi.getConnectionOf(serverPlayer.getUUID());
 
                 if (playerConnection == null || !playerConnection.isConnected()) continue;
                 Group playerGroup = playerConnection.getGroup();
                 if (playerGroup == null || playerGroup.getId() != this.group.getId()) continue;
 
-                uuids.add(serverPlayer.getUuid());
+                uuids.add(serverPlayer.getUUID());
 
                 connections.computeIfAbsent(
-                    serverPlayer.getUuid(),
+                    serverPlayer.getUUID(),
                     (uuid) -> {
                         StaticAudioChannel channel = VoiceChatPlugin.voicechatServerApi.createStaticAudioChannel(
                             UUID.randomUUID(),
-                            VoiceChatPlugin.voicechatServerApi.fromServerLevel(serverPlayer.getWorld()),
+                            VoiceChatPlugin.voicechatServerApi.fromServerLevel(serverPlayer.level()),
                             playerConnection
                         );
 
@@ -196,21 +196,21 @@ public class GroupManager {
         return this.lavaplayer;
     }
 
-    public void broadcast(MutableText text) {
+    public void broadcast(MutableComponent text) {
         // execute on main thread
         server.execute(() -> {
-            ServerPlayerEntity[] players = server.getPlayerManager().getPlayerList().stream().filter(
-                (player) -> this.connections.containsKey(player.getUuid())
-            ).toArray(ServerPlayerEntity[]::new);
+            ServerPlayer[] players = server.getPlayerList().getPlayers().stream().filter(
+                (player) -> this.connections.containsKey(player.getUUID())
+            ).toArray(ServerPlayer[]::new);
 
-            for (ServerPlayerEntity player : players) {
-                player.sendMessage(text);
+            for (ServerPlayer player : players) {
+                player.sendSystemMessage(text);
             }
         });
     }
 
     public void cleanup() {
-        this.broadcast(Text.literal("No more songs to play."));
+        this.broadcast(Component.literal("No more songs to play."));
         if (this.audioFrameSendingTask != null) this.audioFrameSendingTask.cancel(true);
         this.lavaplayer.destroy();
         MusicManager.getInstance().deleteGroup(this.group);

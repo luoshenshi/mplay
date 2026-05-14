@@ -7,7 +7,7 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import dev.derock.svcmusic.SimpleVoiceChatMusic;
 import dev.derock.svcmusic.util.ModUtils;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
 
 public class TrackScheduler extends AudioEventAdapter {
     private final GroupManager group;
@@ -19,7 +19,7 @@ public class TrackScheduler extends AudioEventAdapter {
 
     @Override
     public void onTrackStart(AudioPlayer player, AudioTrack track) {
-        this.group.broadcast(Text.literal("Now playing: ").append(ModUtils.trackInfo(track.getInfo())));
+        this.group.broadcast(Component.literal("Now playing: ").append(ModUtils.trackInfo(track.getInfo())));
     }
 
     @Override
@@ -34,10 +34,10 @@ public class TrackScheduler extends AudioEventAdapter {
     public void onTrackException(AudioPlayer player, AudioTrack track, FriendlyException exception) {
         if (exception.severity == FriendlyException.Severity.COMMON) {
             SimpleVoiceChatMusic.LOGGER.warn("Failed to play {} due to error: {}", track.getInfo().title, exception.getMessage());
-            this.group.broadcast(Text.literal("Failed to play song: " + exception.getMessage()));
+            this.group.broadcast(Component.literal("Failed to play song: " + exception.getMessage()));
         } else {
             SimpleVoiceChatMusic.LOGGER.error("Failed to play {} due to error: {}", track.getInfo().title, exception.getMessage());
-            this.group.broadcast(Text.literal("Failed to play song due to an internal error."));
+            this.group.broadcast(Component.literal("Failed to play song due to an internal error."));
         }
 
         this.group.nextTrack();
@@ -45,7 +45,7 @@ public class TrackScheduler extends AudioEventAdapter {
 
     @Override
     public void onTrackStuck(AudioPlayer player, AudioTrack track, long thresholdMs) {
-        this.group.broadcast(Text.literal("Track stuck -- skipping!"));
+        this.group.broadcast(Component.literal("Track stuck -- skipping!"));
         this.group.nextTrack();
     }
 }

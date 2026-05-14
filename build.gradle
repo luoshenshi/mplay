@@ -1,7 +1,9 @@
 plugins {
-  id 'fabric-loom' version '1.6-SNAPSHOT'
+  id 'net.fabricmc.fabric-loom' version "${loom_version}"
   id 'maven-publish'
-  id 'com.github.johnrengelman.shadow' version '8.1.1'
+  // Change from 'com.github.johnrengelman.shadow' to 'com.gradleup.shadow'
+  // Update version to 8.3.0+ (9.4.1 is the latest as of 2026)
+  id 'com.gradleup.shadow' version '9.4.1'
 }
 
 version = project.mod_version
@@ -35,26 +37,25 @@ repositories {
 dependencies {
   // To change the versions see the gradle.properties file
   minecraft "com.mojang:minecraft:${project.minecraft_version}"
-  mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
-  modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+  implementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
   // Fabric API. This is technically optional, but you probably want it anyway.
-  modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+  implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
   // simple voice chat
-  implementation "de.maxhenkel.voicechat:voicechat-api:2.5.0"
-  modRuntimeOnly "maven.modrinth:simple-voice-chat:fabric-1.21-2.5.16"
+  implementation "de.maxhenkel.voicechat:voicechat-api:2.6.13"
+  runtimeOnly "maven.modrinth:simple-voice-chat:fabric-2.6.17+26.1.2"
 
   // lavaplayer
-  implementation 'dev.arbjerg:lavaplayer:2.2.1'
-  implementation 'dev.lavalink.youtube:v2:1.4.0'
+  implementation 'dev.arbjerg:lavaplayer:2.2.6'
+  implementation 'dev.lavalink.youtube:v2:1.18.0'
 
   // Apache HttpClient dependency
   implementation 'org.apache.httpcomponents:httpclient:4.5.14'
 
   // Additional dependencies
-  include 'org.jsoup:jsoup:1.16.1'
-  include 'net.iharder:base64:2.3.8'
+  include 'org.jsoup:jsoup:1.22.2'
+  include 'net.iharder:base64:2.3.9'
 }
 
 configurations {
@@ -86,8 +87,18 @@ java {
 }
 
 jar {
+  // This line fixes the error
+  duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+  dependsOn shadowJar
+  archiveClassifier.set("")
+
   from("LICENSE") {
     rename { "${it}_${project.base.archivesName.get()}" }
+  }
+
+  from {
+    zipTree(shadowJar.archiveFile.get().asFile)
   }
 }
 
@@ -98,9 +109,13 @@ shadowJar {
   relocate 'org.apache.http', 'dev.derock.svcmusic.apachehttp'
 }
 
-remapJar {
+jar {
   dependsOn shadowJar
-  inputFile = shadowJar.archiveFile.get()
+
+  archiveClassifier.set("")
+  from {
+    zipTree(shadowJar.archiveFile.get().asFile)
+  }
 }
 
 // Configure the maven publication

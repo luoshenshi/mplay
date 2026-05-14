@@ -5,41 +5,45 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 import de.maxhenkel.voicechat.api.Group;
 import de.maxhenkel.voicechat.api.VoicechatConnection;
 import dev.derock.svcmusic.VoiceChatPlugin;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.*;
-import net.minecraft.util.Formatting;
+import net.minecraft.ChatFormatting;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
+import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.Nullable;
 
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.util.concurrent.TimeUnit;
 
 public class ModUtils {
 
-    public static MutableText hyperlink(String string, String url) {
-        return Text.literal(string)
-                .setStyle(Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, url)));
+    public static MutableComponent hyperlink(String string, String url) {
+        return Component.literal(string)
+                .setStyle(Style.EMPTY.withClickEvent(new ClickEvent.OpenUrl(URI.create(url))));
     }
 
-    public static MutableText trackInfo(AudioTrackInfo track) {
+    public static MutableComponent trackInfo(AudioTrackInfo track) {
         return trackInfo(track, false);
     }
 
-    public static MutableText trackInfo(AudioTrackInfo track, boolean longFormat ) {
-       MutableText text = Text.literal(track.title)
+    public static MutableComponent trackInfo(AudioTrackInfo track, boolean longFormat ) {
+       MutableComponent text = Component.literal(track.title)
            .setStyle(
-               Style.EMPTY.withColor(TextColor.fromFormatting(Formatting.AQUA))
-                   .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, track.uri))
+               Style.EMPTY.withColor(ChatFormatting.AQUA)
+                   .withClickEvent(new ClickEvent.OpenUrl(URI.create(track.uri)))
            )
-           .append(Text.literal(" by ").setStyle(Style.EMPTY))
-           .append(Text.literal(track.author).setStyle(
-               Style.EMPTY.withColor(TextColor.fromFormatting(Formatting.AQUA)))
+           .append(Component.literal(" by ").setStyle(Style.EMPTY))
+           .append(Component.literal(track.author).setStyle(
+               Style.EMPTY.withColor(ChatFormatting.AQUA))
            );
 
        // if long format, add more track data
        if (longFormat) {
-           text.append(Text.literal(" [" + formatMMSS(track.length) + "]").setStyle(Style.EMPTY));
+           text.append(Component.literal(" [" + formatMMSS(track.length) + "]").setStyle(Style.EMPTY));
        }
 
        return text;
@@ -77,33 +81,30 @@ public class ModUtils {
         return userInput;
     }
 
-    public static @Nullable CheckPlayerGroup checkPlayerGroup(CommandContext<ServerCommandSource> context) {
-        ServerCommandSource source = context.getSource();
+    public static @Nullable CheckPlayerGroup checkPlayerGroup(CommandContext<CommandSourceStack> context) {
+        CommandSourceStack source = context.getSource();
 
         if (VoiceChatPlugin.voicechatServerApi == null) {
-            source.sendFeedback(
-                () -> Text.literal("VoiceChat API connection has not been established yet! Please try again later."),
-                false
+            source.sendSystemMessage(
+                Component.literal("VoiceChat API connection has not been established yet! Please try again later.")
             );
             return null;
         }
 
-        ServerPlayerEntity player = source.getPlayer();
+        ServerPlayer player = source.getPlayer();
 
         if (player == null) {
-            source.sendFeedback(
-                () -> Text.literal("This command is player only!"),
-                false
+            source.sendSystemMessage(
+                Component.literal("This command is player only!")
             );
             return null;
         }
 
-        VoicechatConnection connection = VoiceChatPlugin.voicechatServerApi.getConnectionOf(player.getUuid());
+        VoicechatConnection connection = VoiceChatPlugin.voicechatServerApi.getConnectionOf(player.getUUID());
 
         if (connection == null) {
-            source.sendFeedback(
-                () -> Text.literal("You are not connected to voice chat!"),
-                false
+            source.sendSystemMessage(
+            Component.literal("You are not connected to voice chat!")
             );
             return null;
         }
@@ -111,9 +112,8 @@ public class ModUtils {
         Group group = connection.getGroup();
 
         if (group == null) {
-            source.sendFeedback(
-                () -> Text.literal("You're not in a group! Just use spotify smh.."),
-                false
+            source.sendSystemMessage(
+                Component.literal("You're not in a group! Just use spotify smh..")
             );
             return null;
         }
@@ -121,6 +121,6 @@ public class ModUtils {
         return result;
     }
 
-    public record CheckPlayerGroup(ServerCommandSource source, ServerPlayerEntity player, Group group) {
+    public record CheckPlayerGroup(CommandSourceStack source, ServerPlayer player, Group group) {
     }
 }
