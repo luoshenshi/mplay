@@ -2,25 +2,19 @@
   "schemaVersion": 1,
   "id": "mplay",
   "version": "${version}",
-
   "name": "MPlay",
   "description": "Play music in Minecraft using Simple Voice Chat.",
-
   "authors": [
     "Kenzx"
   ],
-
   "contact": {
     "homepage": "https://github.com/luoshenshi/mplay",
     "sources": "https://github.com/luoshenshi/mplay",
     "issues": "https://github.com/luoshenshi/mplay/issues"
   },
-
   "license": "MIT",
   "icon": "assets/mplay/icon.png",
-
   "environment": "*",
-
   "entrypoints": {
     "main": [
       "com.kenzx.mplay.MPlayClient"
@@ -29,9 +23,7 @@
       "com.kenzx.mplay.MPlayServer"
     ]
   },
-
   "mixins": [],
-
   "depends": {
     "fabricloader": ">=0.19.2",
     "minecraft": "~26.1.2",

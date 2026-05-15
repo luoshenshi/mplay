@@ -1,12 +1,12 @@
 package com.kenzx.mplay.commands;
 
 import com.kenzx.mplay.MPlayClient;
-import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.brigadier.context.CommandContext;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.kenzx.mplay.audio.GroupManager;
 import com.kenzx.mplay.audio.MusicManager;
 import com.kenzx.mplay.util.ModUtils;
+import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;

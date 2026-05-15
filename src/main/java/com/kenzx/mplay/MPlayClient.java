@@ -9,8 +9,8 @@ import net.minecraft.server.MinecraftServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 public class MPlayClient implements ModInitializer {
     // This logger is used to write text to the console and the log file.
@@ -22,7 +22,7 @@ public class MPlayClient implements ModInitializer {
         Thread thread = new Thread(r, "MPlayExecutor");
         thread.setDaemon(true);
         thread.setUncaughtExceptionHandler(
-            (t, e) -> MPlayClient.LOGGER.error("Uncaught exception in thread {}", t.getName(), e)
+                (t, e) -> MPlayClient.LOGGER.error("Uncaught exception in thread {}", t.getName(), e)
         );
 
         return thread;

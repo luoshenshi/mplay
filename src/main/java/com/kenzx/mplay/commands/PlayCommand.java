@@ -1,14 +1,14 @@
 package com.kenzx.mplay.commands;
 
 import com.kenzx.mplay.MPlayClient;
-import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.brigadier.arguments.StringArgumentType;
-import com.mojang.brigadier.context.CommandContext;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.kenzx.mplay.audio.GroupManager;
 import com.kenzx.mplay.audio.MusicManager;
 import com.kenzx.mplay.audio.PlayLoadHandler;
 import com.kenzx.mplay.util.ModUtils;
+import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.arguments.StringArgumentType;
+import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -20,9 +20,9 @@ import static com.kenzx.mplay.util.ModUtils.checkPlayerGroup;
 public class PlayCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext commandRegistryAccess, Commands.CommandSelection registrationEnvironment) {
         dispatcher.register(Commands.literal("music")
-            .then(Commands.literal("play")
-                .then(Commands.argument("query", StringArgumentType.string())
-                    .executes(PlayCommand::execute))));
+                .then(Commands.literal("play")
+                        .then(Commands.argument("query", StringArgumentType.string())
+                                .executes(PlayCommand::execute))));
     }
 
     public static int execute(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
@@ -35,9 +35,9 @@ public class PlayCommand {
 
             result.source().sendSystemMessage(Component.literal("Loading songs..."));
             MusicManager.getInstance().playerManager.loadItemOrdered(
-                gm.getPlayer(),
-                query,
-                new PlayLoadHandler(result.source(), gm)
+                    gm.getPlayer(),
+                    query,
+                    new PlayLoadHandler(result.source(), gm)
             );
         });
 

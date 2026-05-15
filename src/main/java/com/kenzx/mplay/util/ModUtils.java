@@ -1,10 +1,10 @@
 package com.kenzx.mplay.util;
 
+import com.kenzx.mplay.MPlayServer;
 import com.mojang.brigadier.context.CommandContext;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 import de.maxhenkel.voicechat.api.Group;
 import de.maxhenkel.voicechat.api.VoicechatConnection;
-import com.kenzx.mplay.MPlayServer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.ClickEvent;
@@ -30,34 +30,34 @@ public class ModUtils {
         return trackInfo(track, false);
     }
 
-    public static MutableComponent trackInfo(AudioTrackInfo track, boolean longFormat ) {
-       MutableComponent text = Component.literal(track.title)
-           .setStyle(
-               Style.EMPTY.withColor(ChatFormatting.AQUA)
-                   .withClickEvent(new ClickEvent.OpenUrl(URI.create(track.uri)))
-           )
-           .append(Component.literal(" by ").setStyle(Style.EMPTY))
-           .append(Component.literal(track.author).setStyle(
-               Style.EMPTY.withColor(ChatFormatting.AQUA))
-           );
+    public static MutableComponent trackInfo(AudioTrackInfo track, boolean longFormat) {
+        MutableComponent text = Component.literal(track.title)
+                .setStyle(
+                        Style.EMPTY.withColor(ChatFormatting.AQUA)
+                                .withClickEvent(new ClickEvent.OpenUrl(URI.create(track.uri)))
+                )
+                .append(Component.literal(" by ").setStyle(Style.EMPTY))
+                .append(Component.literal(track.author).setStyle(
+                        Style.EMPTY.withColor(ChatFormatting.AQUA))
+                );
 
-       // if long format, add more track data
-       if (longFormat) {
-           text.append(Component.literal(" [" + formatMMSS(track.length) + "]").setStyle(Style.EMPTY));
-       }
+        // if long format, add more track data
+        if (longFormat) {
+            text.append(Component.literal(" [" + formatMMSS(track.length) + "]").setStyle(Style.EMPTY));
+        }
 
-       return text;
+        return text;
     }
 
     public static String formatMMSS(long millis) {
         String seconds = Long.valueOf(TimeUnit.MILLISECONDS.toSeconds(millis) -
-                    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis))).toString();
+                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis))).toString();
 
         if (seconds.length() == 1) seconds = "0" + seconds;
 
         return String.format("%d:%s",
-            TimeUnit.MILLISECONDS.toMinutes(millis),
-            seconds
+                TimeUnit.MILLISECONDS.toMinutes(millis),
+                seconds
         );
     }
 
@@ -86,7 +86,7 @@ public class ModUtils {
 
         if (MPlayServer.voicechatServerApi == null) {
             source.sendSystemMessage(
-                Component.literal("VoiceChat API connection has not been established yet! Please try again later.")
+                    Component.literal("VoiceChat API connection has not been established yet! Please try again later.")
             );
             return null;
         }
@@ -95,7 +95,7 @@ public class ModUtils {
 
         if (player == null) {
             source.sendSystemMessage(
-                Component.literal("This command is player only!")
+                    Component.literal("This command is player only!")
             );
             return null;
         }
@@ -104,7 +104,7 @@ public class ModUtils {
 
         if (connection == null) {
             source.sendSystemMessage(
-            Component.literal("You are not connected to voice chat!")
+                    Component.literal("You are not connected to voice chat!")
             );
             return null;
         }
@@ -113,7 +113,7 @@ public class ModUtils {
 
         if (group == null) {
             source.sendSystemMessage(
-                Component.literal("You're not in a group! Just use spotify smh..")
+                    Component.literal("You're not in a group!")
             );
             return null;
         }

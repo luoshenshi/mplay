@@ -3,7 +3,7 @@ package com.kenzx.mplay.audio;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import net.minecraft.commands.CommandSourceStack;
 
-public class PlayLoadHandler extends SearchLoadHandler{
+public class PlayLoadHandler extends SearchLoadHandler {
 
 
     public PlayLoadHandler(CommandSourceStack source, GroupManager group) {

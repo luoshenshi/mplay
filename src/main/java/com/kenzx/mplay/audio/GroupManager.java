@@ -32,18 +32,17 @@ public class GroupManager {
     private final ConcurrentHashMap<UUID, StaticAudioChannel> connections = new ConcurrentHashMap<>();
     private final MutableAudioFrame currentFrame;
     private final EqualizerFactory equalizer = new EqualizerFactory();
-
-    private @Nullable ScheduledFuture<?> audioFrameSendingTask = null;
-    private @Nullable ScheduledFuture<?> playerTrackingTask = null;
     private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor(r -> {
         Thread thread = new Thread(r, "SVCGroupMusicExecutor");
         thread.setDaemon(true);
         thread.setUncaughtExceptionHandler(
-            (t, e) -> MPlayClient.LOGGER.error("Uncaught exception in thread {}", t.getName(), e)
+                (t, e) -> MPlayClient.LOGGER.error("Uncaught exception in thread {}", t.getName(), e)
         );
 
         return thread;
     });
+    private @Nullable ScheduledFuture<?> audioFrameSendingTask = null;
+    private @Nullable ScheduledFuture<?> playerTrackingTask = null;
 
     public GroupManager(Group group, AudioPlayer player, MinecraftServer server) {
         this.group = group;
@@ -123,19 +122,19 @@ public class GroupManager {
                 uuids.add(serverPlayer.getUUID());
 
                 connections.computeIfAbsent(
-                    serverPlayer.getUUID(),
-                    (uuid) -> {
-                        StaticAudioChannel channel = MPlayServer.voicechatServerApi.createStaticAudioChannel(
-                            UUID.randomUUID(),
-                            MPlayServer.voicechatServerApi.fromServerLevel(serverPlayer.level()),
-                            playerConnection
-                        );
+                        serverPlayer.getUUID(),
+                        (uuid) -> {
+                            StaticAudioChannel channel = MPlayServer.voicechatServerApi.createStaticAudioChannel(
+                                    UUID.randomUUID(),
+                                    MPlayServer.voicechatServerApi.fromServerLevel(serverPlayer.level()),
+                                    playerConnection
+                            );
 
-                        if (channel == null) return null;
-                        channel.setCategory(MPlayServer.MUSIC_CATEGORY);
+                            if (channel == null) return null;
+                            channel.setCategory(MPlayServer.MUSIC_CATEGORY);
 
-                        return channel;
-                    }
+                            return channel;
+                        }
                 );
             }
 
@@ -200,7 +199,7 @@ public class GroupManager {
         // execute on main thread
         server.execute(() -> {
             ServerPlayer[] players = server.getPlayerList().getPlayers().stream().filter(
-                (player) -> this.connections.containsKey(player.getUUID())
+                    (player) -> this.connections.containsKey(player.getUUID())
             ).toArray(ServerPlayer[]::new);
 
             for (ServerPlayer player : players) {

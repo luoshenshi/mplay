@@ -1,14 +1,14 @@
 package com.kenzx.mplay.commands;
 
 import com.kenzx.mplay.MPlayClient;
+import com.kenzx.mplay.audio.GroupManager;
+import com.kenzx.mplay.audio.MusicManager;
+import com.kenzx.mplay.audio.SearchLoadHandler;
+import com.kenzx.mplay.util.ModUtils;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import com.kenzx.mplay.audio.SearchLoadHandler;
-import com.kenzx.mplay.audio.GroupManager;
-import com.kenzx.mplay.audio.MusicManager;
-import com.kenzx.mplay.util.ModUtils;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -20,9 +20,9 @@ import static com.kenzx.mplay.util.ModUtils.parseTrackId;
 public class SearchCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext commandRegistryAccess, Commands.CommandSelection registrationEnvironment) {
         dispatcher.register(Commands.literal("music")
-            .then(Commands.literal("search")
-                .then(Commands.argument("query", StringArgumentType.string())
-                    .executes(SearchCommand::execute))));
+                .then(Commands.literal("search")
+                        .then(Commands.argument("query", StringArgumentType.string())
+                                .executes(SearchCommand::execute))));
     }
 
     public static int execute(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
@@ -37,9 +37,9 @@ public class SearchCommand {
             GroupManager gm = MusicManager.getInstance().getGroup(result.group(), result.player().level().getServer());
             result.source().sendSystemMessage(Component.literal("Loading songs..."));
             MusicManager.getInstance().playerManager.loadItemOrdered(
-                gm.getPlayer(),
-                query,
-                new SearchLoadHandler(result.source(), gm)
+                    gm.getPlayer(),
+                    query,
+                    new SearchLoadHandler(result.source(), gm)
             );
         });
 
