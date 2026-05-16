@@ -30,11 +30,7 @@ public class SearchLoadHandler implements AudioLoadResultHandler {
         group.enqueueSong(track);
 
         if (source != null) {
-            this.group.broadcast(
-                    Component.literal("Enqueued ")
-                            .append(ModUtils.trackInfo(track.getInfo(), true))
-                            .append(" - ").append(Objects.requireNonNull(source.getPlayer()).getName())
-            );
+            this.group.broadcast(Component.literal("Enqueued ").append(ModUtils.trackInfo(track.getInfo(), true)).append(" - ").append(Objects.requireNonNull(source.getPlayer()).getName()));
         }
     }
 
@@ -48,21 +44,7 @@ public class SearchLoadHandler implements AudioLoadResultHandler {
             MutableComponent text = Component.literal("Found " + loaded.size() + " results: \n");
 
             for (AudioTrack track : loaded) {
-                text.append(Component.literal("  - "))
-                        .append(ModUtils.trackInfo(track.getInfo(), true))
-                        .append(Component.literal("\n"))
-                        .append(Component.literal("    "))
-                        .append(
-                                Component.literal("[Click to add to queue]")
-                                        .setStyle(
-                                                Style.EMPTY.withClickEvent(
-                                                        new ClickEvent.RunCommand(
-                                                                "/music play \"" + track.getIdentifier() + "\""
-                                                        )
-                                                )
-                                        )
-                        )
-                        .append(Component.literal("\n\n"));
+                text.append(Component.literal("  - ")).append(ModUtils.trackInfo(track.getInfo(), true)).append(Component.literal("\n")).append(Component.literal("    ")).append(Component.literal("[Click to add to queue]").setStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand("/music play \"" + track.getIdentifier() + "\"")))).append(Component.literal("\n\n"));
             }
 
             source.sendSystemMessage(text);
