@@ -41,6 +41,7 @@ public class MPlayClient implements ModInitializer {
         CommandRegistrationCallback.EVENT.register(KillCommand::register);
         CommandRegistrationCallback.EVENT.register(VolumeCommand::register);
         CommandRegistrationCallback.EVENT.register(BassboostCommand::register);
+        CommandRegistrationCallback.EVENT.register(MPlayGUICommand::register);
 
         ServerLifecycleEvents.SERVER_STOPPING.register((MinecraftServer server) -> {
             LOGGER.info("Cleaning up due to shutdown.");
