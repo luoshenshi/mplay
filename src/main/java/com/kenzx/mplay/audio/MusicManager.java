@@ -5,7 +5,7 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import de.maxhenkel.voicechat.api.Group;
-import dev.lavalink.youtube.YoutubeAudioSourceManager;
+
 import net.minecraft.server.MinecraftServer;
 
 import java.util.HashMap;
@@ -13,24 +13,24 @@ import java.util.UUID;
 
 public class MusicManager {
     private static final MusicManager instance = new MusicManager();
-    public AudioPlayerManager playerManager;
     private final HashMap<UUID, GroupManager> groups = new HashMap<>();
+    public AudioPlayerManager playerManager;
 
     public MusicManager() {
         MPlayClient.LOGGER.info("Loading sources...");
         this.playerManager = new DefaultAudioPlayerManager();
-
-        // allow hotswapping EQ levels
         this.playerManager.getConfiguration().setFilterHotSwapEnabled(true);
 
+        // 1. Modern v2 YouTube manager
+        dev.lavalink.youtube.YoutubeAudioSourceManager ytSourceManager = new dev.lavalink.youtube.YoutubeAudioSourceManager();
+        this.playerManager.registerSourceManager(ytSourceManager);
+
+        // 2. Legacy YouTube Manager
         AudioSourceManagers.registerRemoteSources(
                 this.playerManager,
-                // we will load v2 of yt music player
                 com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager.class
         );
 
-        YoutubeAudioSourceManager ytSourceManager = new YoutubeAudioSourceManager();
-        this.playerManager.registerSourceManager(ytSourceManager);
         MPlayClient.LOGGER.info("Loaded all sources!");
     }
 
