@@ -1,6 +1,6 @@
 package com.kenzx.mplay.audio;
 
-import com.kenzx.mplay.MPlayClient;
+import com.kenzx.mplay.MPlayServer;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
@@ -17,7 +17,7 @@ public class MusicManager {
     public AudioPlayerManager playerManager;
 
     public MusicManager() {
-        MPlayClient.LOGGER.info("Loading sources...");
+        MPlayServer.LOGGER.info("Loading sources...");
         this.playerManager = new DefaultAudioPlayerManager();
         this.playerManager.getConfiguration().setFilterHotSwapEnabled(true);
 
@@ -31,7 +31,7 @@ public class MusicManager {
                 com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager.class
         );
 
-        MPlayClient.LOGGER.info("Loaded all sources!");
+        MPlayServer.LOGGER.info("Loaded all sources!");
     }
 
     public static MusicManager getInstance() {

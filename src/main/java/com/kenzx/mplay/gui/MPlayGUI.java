@@ -15,7 +15,7 @@ public class MPlayGUI extends Screen {
     private EditBox urlInput;
 
     public MPlayGUI() {
-        super(Component.literal("MPlay Controller"));
+        super(Component.literal("MPlayServer Controller"));
     }
 
     @Override

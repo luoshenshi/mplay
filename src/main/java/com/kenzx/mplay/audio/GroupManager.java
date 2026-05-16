@@ -1,7 +1,7 @@
 package com.kenzx.mplay.audio;
 
-import com.kenzx.mplay.MPlayClient;
 import com.kenzx.mplay.MPlayServer;
+import com.kenzx.mplay.SVC;
 import com.sedmelluq.discord.lavaplayer.filter.equalizer.EqualizerFactory;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
@@ -32,11 +32,12 @@ public class GroupManager {
     private final ConcurrentHashMap<UUID, StaticAudioChannel> connections = new ConcurrentHashMap<>();
     private final MutableAudioFrame currentFrame;
     private final EqualizerFactory equalizer = new EqualizerFactory();
+
     private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor(r -> {
         Thread thread = new Thread(r, "SVCGroupMusicExecutor");
         thread.setDaemon(true);
         thread.setUncaughtExceptionHandler(
-                (t, e) -> MPlayClient.LOGGER.error("Uncaught exception in thread {}", t.getName(), e)
+                (t, e) -> MPlayServer.LOGGER.error("Uncaught exception in thread {}", t.getName(), e)
         );
 
         return thread;
@@ -51,45 +52,46 @@ public class GroupManager {
         this.currentFrame = new MutableAudioFrame();
         this.settingsStore = GroupSettingsManager.getGroup(group);
 
-        // apply EQ
+        // Applying EQs
         this.lavaplayer.setFilterFactory(this.equalizer);
         this.lavaplayer.setFrameBufferDuration(500);
 
-        // buffer for storing current opus frame
+        // Buffer, for storing current opus frame
         ByteBuffer buffer = ByteBuffer.allocate(1024);
         currentFrame.setBuffer(buffer);
 
-        // todo: max queue size
-        this.queue = new LinkedBlockingQueue<>();
+        // Limit queue to 100 tracks
+        this.queue = new LinkedBlockingQueue<>(100);
 
-        // register events
+
+        // Registering Events
         player.addListener(new TrackScheduler(this));
 
-        // schedule task
+        // Scheduling Task
         startGroupTracking();
-        startAudioFrameSending();
+        startSendingAudioFrames();
 
-        // restore settings
+        // Restoring Settings
         this.setVolume(this.settingsStore.volume);
         this.setBassBoost(this.settingsStore.bassboost);
     }
 
-    private void startAudioFrameSending() {
+    private void startSendingAudioFrames() {
         if (this.audioFrameSendingTask != null && !this.audioFrameSendingTask.isDone()) {
             // already started, so leave it.
-            MPlayClient.LOGGER.info("Not starting new audio frame sending task.");
+            MPlayServer.LOGGER.info("Not starting new audio frame sending task.");
             return;
         }
 
         if (this.audioFrameSendingTask != null && this.audioFrameSendingTask.isDone()) {
             // stop and restart
-            MPlayClient.LOGGER.info("Frame task in stuck state, attempting to revive");
+            MPlayServer.LOGGER.info("Frame task in stuck state, attempting to revive");
             this.audioFrameSendingTask.cancel(true);
         }
 
-        MPlayClient.LOGGER.info("Starting new audio frame sending task.");
+        MPlayServer.LOGGER.info("Starting new audio frame sending task.");
         this.audioFrameSendingTask = this.executorService.scheduleAtFixedRate(() -> {
-            if (MPlayServer.voicechatServerApi == null) {
+            if (SVC.voicechatServerApi == null) {
                 return;
             }
 
@@ -108,12 +110,12 @@ public class GroupManager {
 
     private void startGroupTracking() {
         this.playerTrackingTask = executorService.scheduleAtFixedRate(() -> {
-            if (MPlayServer.voicechatServerApi == null) return;
+            if (SVC.voicechatServerApi == null) return;
 
             HashSet<UUID> uuids = new HashSet<>();
 
             for (ServerPlayer serverPlayer : server.getPlayerList().getPlayers()) {
-                VoicechatConnection playerConnection = MPlayServer.voicechatServerApi.getConnectionOf(serverPlayer.getUUID());
+                VoicechatConnection playerConnection = SVC.voicechatServerApi.getConnectionOf(serverPlayer.getUUID());
 
                 if (playerConnection == null || !playerConnection.isConnected()) continue;
                 Group playerGroup = playerConnection.getGroup();
@@ -123,15 +125,15 @@ public class GroupManager {
 
                 connections.computeIfAbsent(
                         serverPlayer.getUUID(),
-                        (uuid) -> {
-                            StaticAudioChannel channel = MPlayServer.voicechatServerApi.createStaticAudioChannel(
+                        (_) -> {
+                            StaticAudioChannel channel = SVC.voicechatServerApi.createStaticAudioChannel(
                                     UUID.randomUUID(),
-                                    MPlayServer.voicechatServerApi.fromServerLevel(serverPlayer.level()),
+                                    SVC.voicechatServerApi.fromServerLevel(serverPlayer.level()),
                                     playerConnection
                             );
 
                             if (channel == null) return null;
-                            channel.setCategory(MPlayServer.MUSIC_CATEGORY);
+                            channel.setCategory(SVC.MUSIC_CATEGORY);
 
                             return channel;
                         }
@@ -146,13 +148,13 @@ public class GroupManager {
 
             // clean up if no players
             if (this.connections.isEmpty()) {
-                MPlayClient.LOGGER.info("Group {} is now empty. Cleaning up...", this.group.getName());
+                MPlayServer.LOGGER.info("Group {} is now empty. Cleaning up...", this.group.getName());
                 this.cleanup();
             }
 
             // stop if no songs queued
             // if (this.lavaplayer.getPlayingTrack() == null && this.queue.isEmpty() && this.audioFrameSendingTask != null) {
-            //     MPlayClient.LOGGER.info("Pausing playback in {} due to empty queue", this.group.getName());
+            //     MPlayServer.LOGGER.info("Pausing playback in {} due to empty queue", this.group.getName());
             //     this.audioFrameSendingTask.cancel(false);
             //     this.audioFrameSendingTask = null;
             // }
@@ -183,7 +185,7 @@ public class GroupManager {
 
             // revive task if needed
             if (track != null) {
-                this.startAudioFrameSending();
+                this.startSendingAudioFrames();
             } else {
                 // no more songs to play, so quit
                 this.cleanup();

@@ -1,6 +1,6 @@
 package com.kenzx.mplay.commands;
 
-import com.kenzx.mplay.MPlayClient;
+import com.kenzx.mplay.MPlayServer;
 import com.kenzx.mplay.audio.GroupManager;
 import com.kenzx.mplay.audio.MusicManager;
 import com.kenzx.mplay.util.ModUtils;
@@ -25,7 +25,7 @@ public class SkipCommand {
         ModUtils.CheckPlayerGroup result = checkPlayerGroup(context);
         if (result == null) return 1;
 
-        MPlayClient.SCHEDULED_EXECUTOR.execute(() -> {
+        MPlayServer.SCHEDULED_EXECUTOR.execute(() -> {
             GroupManager gm = MusicManager.getInstance().getGroup(result.group(), result.player().level().getServer());
             gm.broadcast(Component.literal("Song skipped by " + result.source().getTextName()));
             gm.nextTrack();

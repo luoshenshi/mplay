@@ -1,6 +1,6 @@
 package com.kenzx.mplay.util;
 
-import com.kenzx.mplay.MPlayServer;
+import com.kenzx.mplay.SVC;
 import com.mojang.brigadier.context.CommandContext;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 import de.maxhenkel.voicechat.api.Group;
@@ -84,7 +84,7 @@ public class ModUtils {
     public static @Nullable CheckPlayerGroup checkPlayerGroup(CommandContext<CommandSourceStack> context) {
         CommandSourceStack source = context.getSource();
 
-        if (MPlayServer.voicechatServerApi == null) {
+        if (SVC.voicechatServerApi == null) {
             source.sendSystemMessage(
                     Component.literal("VoiceChat API connection has not been established yet! Please try again later.")
             );
@@ -100,7 +100,7 @@ public class ModUtils {
             return null;
         }
 
-        VoicechatConnection connection = MPlayServer.voicechatServerApi.getConnectionOf(player.getUUID());
+        VoicechatConnection connection = SVC.voicechatServerApi.getConnectionOf(player.getUUID());
 
         if (connection == null) {
             source.sendSystemMessage(
@@ -117,8 +117,7 @@ public class ModUtils {
             );
             return null;
         }
-        CheckPlayerGroup result = new CheckPlayerGroup(source, player, group);
-        return result;
+        return new CheckPlayerGroup(source, player, group);
     }
 
     public record CheckPlayerGroup(CommandSourceStack source, ServerPlayer player, Group group) {

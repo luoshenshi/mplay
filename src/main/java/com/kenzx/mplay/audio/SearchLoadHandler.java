@@ -1,6 +1,6 @@
 package com.kenzx.mplay.audio;
 
-import com.kenzx.mplay.MPlayClient;
+import com.kenzx.mplay.MPlayServer;
 import com.kenzx.mplay.util.ModUtils;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
@@ -61,7 +61,7 @@ public class SearchLoadHandler implements AudioLoadResultHandler {
     @Override
     public void loadFailed(FriendlyException exception) {
         if (!exception.severity.equals(FriendlyException.Severity.COMMON)) {
-            MPlayClient.LOGGER.warn("Failed to load track from query", exception);
+            MPlayServer.LOGGER.warn("Failed to load track from query", exception);
         }
 
         if (source != null) {

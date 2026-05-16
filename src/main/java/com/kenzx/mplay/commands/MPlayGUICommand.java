@@ -3,26 +3,20 @@ package com.kenzx.mplay.commands;
 import com.kenzx.mplay.gui.MPlayGUI;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
-
+import net.fabricmc.fabric.api.client.command.v2.ClientCommands;
+import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.Minecraft;
 import net.minecraft.commands.CommandBuildContext;
-import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.commands.Commands;
 
 public class MPlayGUICommand {
-
-    public static void register(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext commandRegistryAccess, Commands.CommandSelection registrationEnvironment) {
-        dispatcher.register(Commands.literal("music").then(Commands.literal("gui").executes(MPlayGUICommand::execute)));
+    public static void register(CommandDispatcher<FabricClientCommandSource> fabricClientCommandSourceCommandDispatcher, CommandBuildContext commandBuildContext) {
+        fabricClientCommandSourceCommandDispatcher.register(ClientCommands.literal("music-gui").executes(MPlayGUICommand::execute));
     }
 
-    public static int execute(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
-
+    private static int execute(CommandContext<FabricClientCommandSource> fabricClientCommandSourceCommandContext) {
         Minecraft client = Minecraft.getInstance();
 
-        client.execute(() -> {
-            client.setScreen(new MPlayGUI());
-        });
+        client.execute(() -> client.setScreen(new MPlayGUI()));
 
         return 0;
     }

@@ -17,10 +17,13 @@
   "environment": "*",
   "entrypoints": {
     "main": [
+      "com.kenzx.mplay.MPlayServer"
+    ],
+    "client": [
       "com.kenzx.mplay.MPlayClient"
     ],
     "voicechat": [
-      "com.kenzx.mplay.MPlayServer"
+      "com.kenzx.mplay.SVC"
     ]
   },
   "mixins": [],

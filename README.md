@@ -1,4 +1,4 @@
-# Simple Voice Chat Music Player
+# MPlay
 
 Enjoy music with your friends. This mod allows you to stream youtube, soundcloud, bandcamp, vimeo, twitch, mp3, flac,
 wav, m3u, and more into SimpleVoiceChat groups.
@@ -19,25 +19,26 @@ https://github.com/ItzDerock/simplevoicechat-music/assets/14848722/c974d7a7-26a7
 - `/music volume <int;1-100>` - Sets the volume
 - `/music kill` - use when something goes wrong and you want to restart the plugin without restarting the server
 - `/music bassboost <float;0-200>` - adds bass boost
+- `/music-gui` - opens GUI
 
-Song can be a soundcloud URL, Youtube URL, bandcamp URL, etc or it can be just a search term. By default, it will search
+Song can be a SoundCloud URL, YouTube URL, BandCamp URL, etc. Or it can be just a search term. By default, it will
+search
 on YouTube. You can force it to search on soundcloud by using the query `"scsearch: your search terms"`. Lavaplayer also
 supports YouTube Music, though it wasn't very reliable in my testing. To search YouTube Music, use the query
 `"ytmsearch: your search terms"`.
 
 ## Support
 
-Join my [discord server](https://discord.gg/qTTynxnUZe) and select simple voice chat in the onboarding flow.  
-This server is my open-source project "hub" so you may see unrelated channels. Make sure you post your question in the
-correct category!
+This is a fork of the original project, and I’m not actively providing support for it right now.
+
+You can still open an issue if you run into bugs or have questions, but responses and fixes are not guaranteed.
 
 ## Customization
 
-Currently, no options are customizable as this was made for private use, but I thought I'd open-source it since
-others may find it useful.
+This project was originally made for private use, so customization options are limited.
 
-Feel free to PR a refactor that adds in more customization.
+Feel free to fork it further or open a PR if you want to improve/refactor anything.
 
 ## Bugs
 
-Open an issue, but I can't guarantee I'll get around to fixing it.
+If something breaks, open an issue with logs/screenshots if possible. I'll try my best.

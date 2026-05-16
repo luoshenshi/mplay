@@ -1,6 +1,6 @@
 package com.kenzx.mplay.audio;
 
-import com.kenzx.mplay.MPlayClient;
+import com.kenzx.mplay.MPlayServer;
 import com.kenzx.mplay.util.ModUtils;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
@@ -33,10 +33,10 @@ public class TrackScheduler extends AudioEventAdapter {
     @Override
     public void onTrackException(AudioPlayer player, AudioTrack track, FriendlyException exception) {
         if (exception.severity == FriendlyException.Severity.COMMON) {
-            MPlayClient.LOGGER.warn("Failed to play {} due to error: {}", track.getInfo().title, exception.getMessage());
+            MPlayServer.LOGGER.warn("Failed to play {} due to error: {}", track.getInfo().title, exception.getMessage());
             this.group.broadcast(Component.literal("Failed to play song: " + exception.getMessage()));
         } else {
-            MPlayClient.LOGGER.error("Failed to play {} due to error: {}", track.getInfo().title, exception.getMessage());
+            MPlayServer.LOGGER.error("Failed to play {} due to error: {}", track.getInfo().title, exception.getMessage());
             this.group.broadcast(Component.literal("Failed to play song due to an internal error."));
         }
 

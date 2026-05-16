@@ -1,48 +1,50 @@
 package com.kenzx.mplay;
 
-import de.maxhenkel.voicechat.api.VoicechatApi;
-import de.maxhenkel.voicechat.api.VoicechatPlugin;
-import de.maxhenkel.voicechat.api.VoicechatServerApi;
-import de.maxhenkel.voicechat.api.VolumeCategory;
-import de.maxhenkel.voicechat.api.events.EventRegistration;
-import de.maxhenkel.voicechat.api.events.VoicechatServerStartedEvent;
-import org.jetbrains.annotations.Nullable;
+import com.kenzx.mplay.audio.MusicManager;
+import com.kenzx.mplay.commands.*;
+import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.minecraft.server.MinecraftServer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class MPlayServer implements VoicechatPlugin {
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
-    public static String MUSIC_CATEGORY = "streamed_music";
+public class MPlayServer implements ModInitializer {
 
-    public static VoicechatApi voicechatApi;
-    @Nullable
-    public static VoicechatServerApi voicechatServerApi;
-    @Nullable
-    public static VolumeCategory musicVolumeCategory;
+    public static final Logger LOGGER = LoggerFactory.getLogger("mplay");
 
-    @Override
-    public String getPluginId() {
-        return "mplay";
-    }
+    public static ScheduledExecutorService SCHEDULED_EXECUTOR = Executors.newScheduledThreadPool(1, r -> {
+        Thread thread = new Thread(r, "MPlayExecutor");
+        thread.setDaemon(true);
+        thread.setUncaughtExceptionHandler(
+                (t, e) -> MPlayServer.LOGGER.error("Uncaught exception in thread {}", t.getName(), e)
+        );
 
-    @Override
-    public void initialize(VoicechatApi api) {
-        MPlayClient.LOGGER.info("Voicechat API initialized!");
-        voicechatApi = api;
-    }
+        return thread;
+    });
 
     @Override
-    public void registerEvents(EventRegistration registration) {
-        registration.registerEvent(VoicechatServerStartedEvent.class, this::onServerStart);
+    public void onInitialize() {
+        CommandRegistrationCallback.EVENT.register(SearchCommand::register);
+        CommandRegistrationCallback.EVENT.register(NowPlayingCommand::register);
+        CommandRegistrationCallback.EVENT.register(SkipCommand::register);
+        CommandRegistrationCallback.EVENT.register(PlayCommand::register);
+        CommandRegistrationCallback.EVENT.register(QueueCommand::register);
+        CommandRegistrationCallback.EVENT.register(PauseCommand::register);
+        CommandRegistrationCallback.EVENT.register(ResumeCommand::register);
+        CommandRegistrationCallback.EVENT.register(StopCommand::register);
+        CommandRegistrationCallback.EVENT.register(KillCommand::register);
+        CommandRegistrationCallback.EVENT.register(VolumeCommand::register);
+        CommandRegistrationCallback.EVENT.register(BassBoostCommand::register);
+
+        ServerLifecycleEvents.SERVER_STOPPING.register((MinecraftServer _) -> {
+            LOGGER.info("Cleaning up due to shutdown.");
+            MusicManager.getInstance().cleanup();
+        });
+
+        LOGGER.info("Loaded MPlayServer");
     }
-
-    private void onServerStart(VoicechatServerStartedEvent event) {
-        voicechatServerApi = event.getVoicechat();
-        musicVolumeCategory = voicechatServerApi.volumeCategoryBuilder()
-                .setId(MUSIC_CATEGORY)
-                .setName("Music")
-                .setDescription("The volume of streamed music.")
-                .build();
-
-        voicechatServerApi.registerVolumeCategory(musicVolumeCategory);
-    }
-
 }
