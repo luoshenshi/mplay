@@ -62,7 +62,7 @@ public class ModUtils {
     }
 
     public static String parseTrackId(String userInput) {
-        if (userInput.startsWith("ytsearch:") || userInput.startsWith("ytmsearch:") || userInput.startsWith("scsearch:")) {
+        if (userInput.startsWith("ytsearch:") || userInput.startsWith("ytmsearch:") || userInput.startsWith("scsearch:") || userInput.startsWith("spotify:")) {
             return userInput;
         }
 
@@ -75,7 +75,7 @@ public class ModUtils {
         try {
             new URL(userInput);
         } catch (MalformedURLException e) {
-            return "ytsearch:" + userInput;
+            return "ytmsearch:" + userInput;
         }
 
         return userInput;

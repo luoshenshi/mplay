@@ -40,6 +40,15 @@ public class MPlayServer implements ModInitializer {
         CommandRegistrationCallback.EVENT.register(VolumeCommand::register);
         CommandRegistrationCallback.EVENT.register(BassBoostCommand::register);
 
+        // Staring it when server starts
+        ServerLifecycleEvents.SERVER_STARTING.register(server -> {
+            SCHEDULED_EXECUTOR.execute(() -> {
+                LOGGER.info("Pre-initializing MusicManager...");
+                MusicManager.getInstance();
+                LOGGER.info("MusicManager ready.");
+            });
+        });
+
         ServerLifecycleEvents.SERVER_STOPPING.register((MinecraftServer _) -> {
             LOGGER.info("Cleaning up due to shutdown.");
             MusicManager.getInstance().cleanup();

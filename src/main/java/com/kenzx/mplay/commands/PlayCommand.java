@@ -34,9 +34,15 @@ public class PlayCommand {
             GroupManager gm = MusicManager.getInstance().getGroup(result.group(), result.player().level().getServer());
 
             result.source().sendSystemMessage(Component.literal("Loading songs..."));
+            String finalQuery = query;
+            if (query.startsWith("spotify:")) {
+                String spotifyUrl = query.split("spotify:")[1].trim();
+                finalQuery = "https://mplay.pcnox7.workers.dev/play?url=" + spotifyUrl;
+            }
+            System.out.println(finalQuery);
             MusicManager.getInstance().playerManager.loadItemOrdered(
                     gm.getPlayer(),
-                    query,
+                    finalQuery,
                     new PlayLoadHandler(result.source(), gm)
             );
         });

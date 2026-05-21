@@ -1,7 +1,8 @@
 # MPlay
 
-Enjoy music with your friends. This mod allows you to stream youtube, soundcloud, bandcamp, vimeo, twitch, mp3, flac,
-wav, m3u, and more into SimpleVoiceChat groups.
+Enjoy music with your friends. This mod allows you to stream **YouTube**, **SoundCloud**, **BandCamp**, **Vimeo**, *
+*Twitch**, *mp3*, *flac*,
+*wav*, *m3u*, and more into SimpleVoiceChat groups.
 Powered by the lightweight [lavaplayer](https://github.com/lavalink-devs/lavaplayer) library.
 
 https://github.com/ItzDerock/simplevoicechat-music/assets/14848722/c974d7a7-26a7-44b9-9c8a-b6d6722a8582
@@ -17,15 +18,18 @@ https://github.com/ItzDerock/simplevoicechat-music/assets/14848722/c974d7a7-26a7
 - `/music resume` - Resumes the current song
 - `/music stop` - Stops the current song and clears the queue
 - `/music volume <int;1-100>` - Sets the volume
-- `/music kill` - use when something goes wrong and you want to restart the plugin without restarting the server
+- `/music kill` - use when something goes wrong, and you want to restart the plugin without restarting the server
 - `/music bassboost <float;0-200>` - adds bass boost
 - `/music-gui` - opens GUI
 
-Song can be a SoundCloud URL, YouTube URL, BandCamp URL, etc. Or it can be just a search term. By default, it will
-search
-on YouTube. You can force it to search on soundcloud by using the query `"scsearch: your search terms"`. Lavaplayer also
-supports YouTube Music, though it wasn't very reliable in my testing. To search YouTube Music, use the query
-`"ytmsearch: your search terms"`.
+Song can be a SoundCloud URL, YouTube URL, BandCamp URL, Spotify URL, etc. Or it can be just a search term.
+By default, it will search on YouTube Music. You can force it to search on SoundCloud by using the query
+`"scsearch: your search terms"`.
+Lavaplayer also supports YouTube. To search YouTube Music, use the query `"ytsearch: your search terms"`.
+
+> **_NOTE ⚠️:_**\
+> To play Spotify URLs, add the `spotify:` prefix in your command.  
+> Example: `/music play "spotify: ..."`
 
 ## Support
 
