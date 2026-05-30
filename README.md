@@ -1,8 +1,6 @@
 # MPlay
 
-Enjoy music with your friends. This mod allows you to stream **YouTube**, **SoundCloud**, **BandCamp**, **Vimeo**, *
-*Twitch**, *mp3*, *flac*,
-*wav*, *m3u*, and more into SimpleVoiceChat groups.
+Enjoy music with your friends. This mod allows you to stream **Spotify**, **YouTube**, **SoundCloud**, **BandCamp**, **Vimeo**, **Twitch**, *mp3*, *flac*, *wav*, *m3u*, and more into SimpleVoiceChat groups.
 Powered by the lightweight [lavaplayer](https://github.com/lavalink-devs/lavaplayer) library.
 
 https://github.com/ItzDerock/simplevoicechat-music/assets/14848722/c974d7a7-26a7-44b9-9c8a-b6d6722a8582
