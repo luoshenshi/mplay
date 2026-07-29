@@ -1,4 +1,4 @@
-# MPlay for 26.2
+# MPlay ported to Minecraft 26.2
 
 Enjoy music with your friends. This mod allows you to stream **Spotify**, **YouTube**, **SoundCloud**, **BandCamp**, **Vimeo**, **Twitch**, *mp3*, *flac*, *wav*, *m3u*, and more into SimpleVoiceChat groups.
 Powered by the lightweight [lavaplayer](https://github.com/lavalink-devs/lavaplayer) library.
@@ -38,7 +38,3 @@ This is a port of luoshenshi's fork of the original project, and I’m not activ
 This project was originally made for private use, so customization options are limited.
 
 Feel free to fork it further.
-
-## Bugs
-
-If something breaks, open an issue with logs/screenshots if possible. I'll try my best.
