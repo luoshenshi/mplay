@@ -17,7 +17,7 @@ public class MPlayGUICommand {
         Minecraft client = Minecraft.getInstance();
 
         client.execute(() -> {
-            Minecraft.getInstance().setScreen(new MPlayGUI());
+            client.gui.setScreen(new MPlayGUI());
         });
 
         return 0;
