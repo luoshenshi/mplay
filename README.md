@@ -1,4 +1,4 @@
-# MPlay
+# MPlay for 26.2
 
 Enjoy music with your friends. This mod allows you to stream **Spotify**, **YouTube**, **SoundCloud**, **BandCamp**, **Vimeo**, **Twitch**, *mp3*, *flac*, *wav*, *m3u*, and more into SimpleVoiceChat groups.
 Powered by the lightweight [lavaplayer](https://github.com/lavalink-devs/lavaplayer) library.
@@ -31,15 +31,13 @@ Lavaplayer also supports YouTube. To search YouTube Music, use the query `"ytsea
 
 ## Support
 
-This is a fork of the original project, and I’m not actively providing support for it right now.
-
-You can still open an issue if you run into bugs or have questions, but responses and fixes are not guaranteed.
+This is a port of luoshenshi's fork of the original project, and I’m not actively providing support for it right now.
 
 ## Customization
 
 This project was originally made for private use, so customization options are limited.
 
-Feel free to fork it further or open a PR if you want to improve/refactor anything.
+Feel free to fork it further.
 
 ## Bugs
 
