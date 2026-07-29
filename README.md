@@ -18,7 +18,7 @@ https://github.com/ItzDerock/simplevoicechat-music/assets/14848722/c974d7a7-26a7
 - `/music volume <int;1-100>` - Sets the volume
 - `/music kill` - use when something goes wrong, and you want to restart the plugin without restarting the server
 - `/music bassboost <float;0-200>` - adds bass boost
-- `/music-gui` - opens GUI
+- `/music-gui` - opens GUI (Client-Only)
 
 Song can be a SoundCloud URL, YouTube URL, BandCamp URL, Spotify URL, etc. Or it can be just a search term.
 By default, it will search on YouTube Music. You can force it to search on SoundCloud by using the query
