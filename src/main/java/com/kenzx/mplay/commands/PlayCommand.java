@@ -21,7 +21,7 @@ public class PlayCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext commandRegistryAccess, Commands.CommandSelection registrationEnvironment) {
         dispatcher.register(Commands.literal("music")
                 .then(Commands.literal("play")
-                        .then(Commands.argument("query", StringArgumentType.string())
+                        .then(Commands.argument("query", StringArgumentType.greedyString())
                                 .executes(PlayCommand::execute))));
     }
 
