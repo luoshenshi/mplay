@@ -21,7 +21,7 @@ public class SearchCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext commandRegistryAccess, Commands.CommandSelection registrationEnvironment) {
         dispatcher.register(Commands.literal("music")
                 .then(Commands.literal("search")
-                        .then(Commands.argument("query", StringArgumentType.string())
+                        .then(Commands.argument("query", StringArgumentType.greedyString())
                                 .executes(SearchCommand::execute))));
     }
 
