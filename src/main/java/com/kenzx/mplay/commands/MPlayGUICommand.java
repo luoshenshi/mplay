@@ -16,7 +16,9 @@ public class MPlayGUICommand {
     private static int execute(CommandContext<FabricClientCommandSource> fabricClientCommandSourceCommandContext) {
         Minecraft client = Minecraft.getInstance();
 
-        client.execute(() -> client.setScreen(new MPlayGUI()));
+        client.execute(() -> {
+            client.gui.setScreen(new MPlayGUI());
+        });
 
         return 0;
     }

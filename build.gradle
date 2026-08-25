@@ -42,8 +42,8 @@ dependencies {
     runtimeOnly "maven.modrinth:simple-voice-chat:fabric-2.6.17+26.1.2"
 
     // lavaplayer and stuff updated
-    shadowImplementation 'dev.arbjerg:lavaplayer:2.2.6'
-    shadowImplementation 'dev.lavalink.youtube:v2:1.18.0'
+    shadowImplementation 'dev.arbjerg:lavaplayer:2.2.7'
+    shadowImplementation 'dev.lavalink.youtube:v2:1.18.2'
     shadowImplementation 'org.apache.httpcomponents:httpclient:4.5.14'
 
     // Additional dependencies

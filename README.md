@@ -1,4 +1,4 @@
-# MPlay
+# MPlay ported to Minecraft 26.2
 
 Enjoy music with your friends. This mod allows you to stream **Spotify**, **YouTube**, **SoundCloud**, **BandCamp**, **Vimeo**, **Twitch**, *mp3*, *flac*, *wav*, *m3u*, and more into SimpleVoiceChat groups.
 Powered by the lightweight [lavaplayer](https://github.com/lavalink-devs/lavaplayer) library.
@@ -18,12 +18,12 @@ https://github.com/ItzDerock/simplevoicechat-music/assets/14848722/c974d7a7-26a7
 - `/music volume <int;1-100>` - Sets the volume
 - `/music kill` - use when something goes wrong, and you want to restart the plugin without restarting the server
 - `/music bassboost <float;0-200>` - adds bass boost
-- `/music-gui` - opens GUI
+- `/music-gui` - opens GUI (Client-Only)
 
 Song can be a SoundCloud URL, YouTube URL, BandCamp URL, Spotify URL, etc. Or it can be just a search term.
-By default, it will search on YouTube Music. You can force it to search on SoundCloud by using the query
+By default, it will search on YouTube. You can force it to search on SoundCloud by using the query
 `"scsearch: your search terms"`.
-Lavaplayer also supports YouTube. To search YouTube Music, use the query `"ytsearch: your search terms"`.
+Lavaplayer also supports YouTube. To search YouTube Music, use the query `"ytmsearch: your search terms"`.
 
 > **_NOTE ⚠️:_**\
 > To play Spotify URLs, add the `spotify:` prefix in your command.  
@@ -31,16 +31,10 @@ Lavaplayer also supports YouTube. To search YouTube Music, use the query `"ytsea
 
 ## Support
 
-This is a fork of the original project, and I’m not actively providing support for it right now.
-
-You can still open an issue if you run into bugs or have questions, but responses and fixes are not guaranteed.
+This is a port of luoshenshi's fork of the original project, and I’m not actively providing support for it right now.
 
 ## Customization
 
 This project was originally made for private use, so customization options are limited.
 
-Feel free to fork it further or open a PR if you want to improve/refactor anything.
-
-## Bugs
-
-If something breaks, open an issue with logs/screenshots if possible. I'll try my best.
+Feel free to fork it further.
