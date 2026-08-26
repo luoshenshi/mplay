@@ -31,10 +31,18 @@ Lavaplayer also supports YouTube. To search YouTube Music, use the query `"ytmse
 
 ## Support
 
-This is a port of luoshenshi's fork of the original project, and I’m not actively providing support for it right now.
+This is a fork of the original project, and I’m not actively providing support for it right now.
+
+You can still open an issue if you run into bugs or have questions, but responses and fixes are not guaranteed.
 
 ## Customization
 
 This project was originally made for private use, so customization options are limited.
 
 Feel free to fork it further.
+
+## Contributors
+
+<a href="https://github.com/techarecrazy">
+  <img src="https://github.com/techarecrazy.png" width="60px;" alt="techarecrazy"/>
+</a>
