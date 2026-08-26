@@ -43,6 +43,6 @@ Feel free to fork it further.
 
 ## Contributors
 
-<a href="https://github.com/techarecrazy">
-  <img src="https://github.com/techarecrazy.png" width="60px;" alt="techarecrazy"/>
+<a href="https://github.com/luoshenshi/mplay/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=luoshenshi/mplay" alt="Contributors" />
 </a>
